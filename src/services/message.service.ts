@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { mailgunClient } from '../config/mailgun.config';
 import { Message, MessageType } from '../interface/message.interface';
 import { MailService } from './mail.service';
 
@@ -21,7 +20,8 @@ export class MessageService {
   }
 
   private async sendEmail(message: Message): Promise<void> {
-    await this.mailerService.sendMail();
+    const { to,subject, text,html } = message;
+    await this.mailerService.sendMail( to,subject, text,html );
   }
 
   private async sendSms(message: Message): Promise<void> {
@@ -31,6 +31,5 @@ export class MessageService {
       to,
       text,
     };
-    await mailgunClient.messages.create(process.env.MAILGUN_DOMAIN, data);
   }
 }
