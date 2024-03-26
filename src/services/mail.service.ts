@@ -1,33 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import FormData from 'form-data';
-
+import * as FormData from 'form-data';
 @Injectable()
-export class MailService{
-  constructor(private httpService: HttpService) {}
+export class MailService {
+  private mailgun: any;
 
-  async sendMail() {
+  constructor() {
     const formData = new FormData();
-    formData.append('from', 'Excited User <mailgun@sandbox-123.mailgun.org>');
-    formData.append('to', 'test@example.com');
-    formData.append('subject', 'Hello');
-    formData.append('text', 'Testing some Mailgun awesomeness!');
-    formData.append('html', '<h1>Testing some Mailgun awesomeness!</h1>');
+    this.mailgun = this.mailgun(formData);
+  }
+
+  async sendEmail(from: string, to: string[], subject: string, text: string, html: string) {
+    const mg = this.mailgun.client({
+      username: 'fintegrate',
+      key: process.env.MAILGUN_API_KEY,
+    });
 
     try {
-      const response = await this.httpService.post('https://api.mailgun.net/v3/sandbox-123.mailgun.org/messages', formData, {
-        auth: {
-          username: 'api',
-          password: process.env.MAILGUN_API_KEY || 'key-yourkeyhere',
-        },
-        headers: {
-          ...formData.getHeaders(),
-          'Content-Type': 'multipart/form-data',
-        },
-      }).toPromise();
-
-    } catch (error) {
-      console.error('Error sending email:', error.message);
+      const msg = await mg.messages.create('fintegrate.domain', {
+        from: 'fintegrate@sandbox-123.mailgun.org',//Using the diplot domain, so that's how the email address will look
+        to: to,
+        subject: subject,
+        text: text,
+        html: html,
+      });
+      console.log(msg);
+    } catch (err) {
+      console.log(err);
     }
   }
 }
