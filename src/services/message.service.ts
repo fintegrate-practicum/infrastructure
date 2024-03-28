@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Message, MessageType } from '../interface/message.interface';
-import { MailService } from './mail.service';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class MessageService {
-  constructor( private readonly mailerService: MailService) {}
+  constructor( private readonly mailerService: EmailService) {}
 
   async sendMessage(message: Message): Promise<void> {
     switch (message.type) {
@@ -20,8 +20,8 @@ export class MessageService {
   }
 
   private async sendEmail(message: Message): Promise<void> {
-    const { to,subject, text,html } = message;
-    await this.mailerService.sendMail( to,subject, text,html );
+    const { to,subject, text } = message;
+    await this.mailerService.sendEmail( to,subject, text );
   }
 
   private async sendSms(message: Message): Promise<void> {
