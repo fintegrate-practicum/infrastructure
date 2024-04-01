@@ -10,13 +10,13 @@ export class EmailService {
     domain: process.env.MAILGUN_DOMAIN,
   });
 
-  async sendEmail(to: string, subject: string, text: string) {
+  async sendEmail(to: string, subject: string, html: string) {
 
     const data = {
       from: process.env.MAILGUN_EMAIL,
       to,
       subject,
-      text,
+      html,
     };
 
     try {
