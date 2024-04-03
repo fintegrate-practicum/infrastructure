@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,Logger } from '@nestjs/common';
 import * as mailgun from 'mailgun-js';
 require('dotenv').config();
 
 @Injectable()
 export class EmailService {
+
+  private readonly logger = new Logger(EmailService.name);
 
   private mailgun = mailgun({
     apiKey: process.env.MAILGUN_API_KEY,
@@ -21,9 +23,9 @@ export class EmailService {
 
     try {
       await this.mailgun.messages().send(data);
-      console.log('email sent successfully');
+      this.logger.log('email sent successfully');
     } catch (error) {
-      console.error('Error sending email:', error);
+      this.logger.error('Error sending email:', error);
     }
 
   }
