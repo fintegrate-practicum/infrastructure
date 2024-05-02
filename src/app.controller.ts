@@ -1,12 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { EventPattern } from '@nestjs/microservices';
+import { MessagePattern,Payload} from '@nestjs/microservices';
+import { Message } from 'amqplib';
+import { Controller } from '@nestjs/common';
+import { log } from 'console';
 
+import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consumer.service';
+import {Post, Body } from '@nestjs/common';
+
+
+//שלי
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+  constructor() {}
+@MessagePattern('message_queue') 
+async handleEvent(@Payload() message: Message) {
+  console.log('Received message:', message);
+  // טיפול בהודעה כאן
 }
+}
+
+
+
