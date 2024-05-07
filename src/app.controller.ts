@@ -10,10 +10,7 @@ export class AppController {
 @MessagePattern('message_queue') 
 async handleEvent(@Payload() message: Message) {
   console.log('Received message:', message);
-  // טיפול בהודעה כאן
+  //take care of message
 
 }
 }
-
-
-

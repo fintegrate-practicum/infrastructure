@@ -3,10 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consumer.service';
+import { EmailModule } from './modules/email.module';
+import { EmailService } from './services/email.service';
 
-//יצירת החיבור עם רביט
+//connect to rabbit
 @Module({
   imports: [
+    EmailModule,
     ClientsModule.register([
       {
         name: 'RABBIT_CONSUMER_SERVICE',
@@ -19,10 +22,6 @@ import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consume
     ]),
   ],
   controllers: [AppController],
-  providers: [RabbitConsumerService,AppService],
+  providers: [RabbitConsumerService,AppService,EmailService],
 })
 export class AppModule {}
-
-
-
-
