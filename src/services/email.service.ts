@@ -11,7 +11,7 @@ export class EmailService {
     apiKey: process.env.MAILGUN_API_KEY,
     domain: process.env.MAILGUN_DOMAIN,
   });
-
+  
   async sendEmail(to: string, subject: string, html: string) {
 
     const data = {
@@ -27,13 +27,5 @@ export class EmailService {
     } catch (error) {
       this.logger.error('Error sending email:', error);
     }
-
   }
 }
-
-
-
-
-
-
-
