@@ -4,11 +4,6 @@ import { Message } from 'amqplib';
 import { Controller } from '@nestjs/common';
 import { log } from 'console';
 
-import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consumer.service';
-import {Post, Body } from '@nestjs/common';
-
-
-//שלי
 @Controller()
 export class AppController {
   constructor() {}
@@ -16,6 +11,7 @@ export class AppController {
 async handleEvent(@Payload() message: Message) {
   console.log('Received message:', message);
   // טיפול בהודעה כאן
+
 }
 }
 

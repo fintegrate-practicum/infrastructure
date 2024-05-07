@@ -19,6 +19,3 @@ networks:
     driver: bridge
 
 
-
-
-

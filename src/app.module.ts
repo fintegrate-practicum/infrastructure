@@ -22,3 +22,7 @@ import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consume
   providers: [RabbitConsumerService,AppService],
 })
 export class AppModule {}
+
+
+
+
