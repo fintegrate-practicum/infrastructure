@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Message, MessageType } from '../interface/message.interface';
 import { EmailService } from './email.service';
-import { Console, log } from 'console';
+
 
 @Injectable()
 export class MessageService {
