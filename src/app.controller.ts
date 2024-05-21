@@ -1,13 +1,16 @@
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Message } from 'amqplib';
 import { Controller } from '@nestjs/common';
+import {MessageService} from './services/message.service';
+import { Message, MessageType } from './interface/message.interface';
 
 @Controller()
 export class AppController {
-  constructor() {}
+  constructor(private readonly MessageService: MessageService) {
+  }
+
   @MessagePattern('message_queue')
   async handleEvent(@Payload() message: Message) {
-    console.log('Received the message:', message);
-    //take care of message
+     await this.MessageService.sendMessage(message);
+    //take care of message 
   }
 }

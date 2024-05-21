@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Message, MessageType } from '../interface/message.interface';
 import { EmailService } from './email.service';
+import { Console, log } from 'console';
 
 @Injectable()
 export class MessageService {
@@ -23,6 +24,7 @@ export class MessageService {
 
   private async sendEmail(message: Message): Promise<void> {
     const { to, subject, html } = message;
+    console.log(message);
     await this.mailerService.sendEmail(to, subject, html);
   }
 
