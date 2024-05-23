@@ -1,13 +1,25 @@
-import { Injectable,Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Message, MessageType } from '../interface/message.interface';
 import { EmailService } from './email.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
-export class MessageService {
-
+export class MessageService implements OnModuleInit {
   private readonly logger = new Logger(MessageService.name);
-  
-  constructor(private readonly mailerService: EmailService) {}
+  private emailContent: string;
+
+  constructor(private readonly mailerService: EmailService) { }
+
+  onModuleInit() {
+    try {
+      const htmlFilePath = path.join(__dirname, '..', 'src', 'Employee invitation email', 'Employee invitation email.html');
+      const emailContent = fs.readFileSync(htmlFilePath, 'utf-8');
+    } catch (error) {
+      this.logger.error('Failed to read email content file', error.stack);
+
+    }
+  }
 
   async sendMessage(message: Message): Promise<void> {
     switch (message.type) {
@@ -23,16 +35,27 @@ export class MessageService {
   }
 
   private async sendEmail(message: Message): Promise<void> {
-    const { to, subject, html } = message;
-    await this.mailerService.sendEmail(to, subject, html);
+    try {
+      const { to, subject, email } = message;
+      await this.mailerService.sendEmail(email, subject, this.emailContent);
+      this.logger.log(`Email sent to ${email}`);
+    } catch (error) {
+      this.logger.error(`Failed to send email to ${message.email}`, error.stack);
+      throw error;
+    }
   }
 
   private async sendSms(message: Message): Promise<void> {
-    const { to, html } = message;
-    const data = {
-      to,
-      html,
-    };
-    this.logger.log(data);
+    try {
+      const { to } = message;
+      const data = {
+        to,
+        emailContent: this.emailContent,
+      };
+      this.logger.log(`SMS data prepared for ${to}`, data);
+    } catch (error) {
+      this.logger.error(`Failed to send SMS to ${message.to}`, error.stack);
+      throw error;
+    }
   }
 }
