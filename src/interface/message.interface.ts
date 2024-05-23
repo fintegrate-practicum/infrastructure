@@ -2,13 +2,10 @@ export interface Message {
   to: string;
   subject?: string;
   text?: string;
-  email?: string;
+  name?: string;
   // html: string;
   type: MessageType;
-  payload: {
-    employeeEmail: string;
-    invitationLink: string;
-  };
+  invitationLink: string;
 }
 
 export enum MessageType {

@@ -17,7 +17,6 @@ export class MessageService implements OnModuleInit {
       const emailContent = fs.readFileSync(htmlFilePath, 'utf-8');
     } catch (error) {
       this.logger.error('Failed to read email content file', error.stack);
-
     }
   }
 
@@ -36,11 +35,11 @@ export class MessageService implements OnModuleInit {
 
   private async sendEmail(message: Message): Promise<void> {
     try {
-      const { to, subject, email } = message;
-      await this.mailerService.sendEmail(email, subject, this.emailContent);
-      this.logger.log(`Email sent to ${email}`);
+      const { to, subject } = message;
+      await this.mailerService.sendEmail(to, subject, this.emailContent);
+      this.logger.log(`Email sent to ${to}`);
     } catch (error) {
-      this.logger.error(`Failed to send email to ${message.email}`, error.stack);
+      this.logger.error(`Failed to send email to ${message.to}`, error.stack);
       throw error;
     }
   }
