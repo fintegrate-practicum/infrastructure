@@ -1,16 +1,15 @@
-import { EventPattern } from '@nestjs/microservices';
-import { MessagePattern,Payload} from '@nestjs/microservices';
-import { Message } from 'amqplib';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { Controller } from '@nestjs/common';
-import { log } from 'console';
+import { Message } from './interface/message.interface';
+import { MailBridgeService } from './services/mail-bridge/mail-bridge.service';
 
 @Controller()
 export class AppController {
-  constructor() {}
-@MessagePattern('message_queue') 
-async handleEvent(@Payload() message: Message) {
-  console.log('Received message:', message);
-  //take care of message
+  constructor(private readonly handleMessage: MailBridgeService) {}
 
-}
+  @MessagePattern('message_queue')
+  async handleEvent(@Payload() message: Message) {
+    await this.handleMessage.handleMessage(message);
+    //take care of message
+  }
 }
