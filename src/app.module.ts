@@ -5,6 +5,8 @@ import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consume
 import { EmailModule } from './modules/email.module';
 import { EmailService } from './services/email.service';
 import { ConfigModule } from '@nestjs/config';
+import { MessageService } from './services/message.service';
+import { MailBridgeService } from './services/mail-bridge/mail-bridge.service';
 
 @Module({
   imports: [
@@ -15,6 +17,12 @@ import { ConfigModule } from '@nestjs/config';
     EmailModule,
   ],
   controllers: [AppController],
-  providers: [RabbitConsumerService, AppService, EmailService],
+  providers: [
+    AppService,
+    RabbitConsumerService,
+    EmailService,
+    MessageService,
+    MailBridgeService,
+  ],
 })
 export class AppModule {}
