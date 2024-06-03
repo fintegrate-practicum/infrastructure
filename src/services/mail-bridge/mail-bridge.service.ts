@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { MessageService } from '../message.service';
 import { Message, MessageType } from '../../interface/message.interface';
+import { log } from 'handlebars';
 
 @Injectable()
 //הhtml פונקציה זו בודקת מה הסוג הודעה ולפי זה היא מפעילה פונקציה מתאימה שמחזירה את
 // ואז היא מפעילה את הפונקציה של שליחת המייל
 export class MailBridgeService {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(private readonly messageService: MessageService) { }
   async handleMessage(message: any): Promise<void> {
     let htmlContent: string;
     try {
@@ -19,6 +20,11 @@ export class MailBridgeService {
           );
           break;
         // אפשר להוסיף כאן מקרים נוספים
+        case 'newTask':
+          htmlContent = await this.messageHtmlNewTask(
+            message
+          );
+          break;
         default:
           throw new Error(`Unknown kindSubject: ${message.kindSubject}`);
       }
@@ -45,6 +51,25 @@ export class MailBridgeService {
         <p>How are you?</p>
         <p>Best regards,</p>
         <p>RabbitMq</p>
+      `;
+  }
+
+  private messageHtmlNewTask(message: any): string {
+    return `
+        <h1>Assign a new task-${message.subject}</h1>
+        <h2>hello ${message.name}</h2>
+        <h2>A new task has been assigned for you:${message.subject}</h2>
+        <p>Mission description:
+        ${message.description}
+        </p>
+        <h2>Due Date: ${message.date}</h2>
+        <p>
+        Please let me know if you have any questions about the assignment.</br>
+        I trust you to carry out the task in the best possible way.</br>
+        Successfully,
+        </p>
+        <h2>${message.managerName}</h2>
+
       `;
   }
 }
