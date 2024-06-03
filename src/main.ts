@@ -9,9 +9,9 @@ async function bootstrap() {
       options: {
         urls: [process.env.URL],
         queue: process.env.RABBITMQ_QUEUE_NAME,
-        queueOptions: {
-          durable: false,
-        },
+        // queueOptions: {
+        //   durable: false,
+        // },
         username: process.env.AMQP_USERNAME,
         password: process.env.AMQP_PASSWORD,
       },
