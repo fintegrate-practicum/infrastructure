@@ -10,3 +10,4 @@ export enum MessageType {
   Email = 'email',
   Sms = 'sms',
 }
+

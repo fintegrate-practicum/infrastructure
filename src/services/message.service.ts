@@ -12,7 +12,7 @@ export class MessageService {
     switch (message.type) {
       case MessageType.Email:
         await this.sendEmail(message);
-        break;
+        break;   
       case MessageType.Sms:
         await this.sendSms(message);
         break;
