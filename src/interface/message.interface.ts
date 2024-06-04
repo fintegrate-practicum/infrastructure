@@ -5,6 +5,7 @@ export interface Message {
   html: string;
   type: MessageType;
   kindSubject: string;
+  code?:string
 }
 export enum MessageType {
   Email = 'email',

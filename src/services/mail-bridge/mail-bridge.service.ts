@@ -17,6 +17,13 @@ export class MailBridgeService {
             message.subject,
             message.text,
           );
+          case 'send-code':
+            htmlContent = await this.sendCodeHtml(
+              message.to,
+              message.subject,
+              message.text,
+              message.code,
+            );
           break;
         // אפשר להוסיף כאן מקרים נוספים
         default:
@@ -45,6 +52,15 @@ export class MailBridgeService {
         <p>How are you?</p>
         <p>Best regards,</p>
         <p>RabbitMq</p>
+      `;
+  }
+  private sendCodeHtml(to: string, subject: string, text: string,code:string): string {
+    return `
+        <h1>${subject}</h1>
+        <p>Hello ${to},</p>
+        <p>${text}</p>
+        <p>This is your verification code</p>
+        <p>${code}</p>
       `;
   }
 }
