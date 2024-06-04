@@ -4,7 +4,8 @@ import { Message, MessageType } from '../../interface/message.interface';
 import { readFile } from 'fs/promises';
 
 @Injectable()
-//פונקציה זו מפעילה עבור כל סוג הודעה את הפוקנציה המתאימה לו
+//הhtml פונקציה זו בודקת מה הסוג הודעה ולפי זה היא מפעילה פונקציה מתאימה שמחזירה את
+// ואז היא מפעילה את הפונקציה של שליחת המייל
 export class MailBridgeService {
   constructor(private readonly messageService: MessageService) { }
 
@@ -57,7 +58,6 @@ export class MailBridgeService {
   }
 
   private messageHtml(to: string, subject: string, text: string): string {
-
     //פה מחזירים איך רוצים שההודעה תראה במייל, html
     return `
         <h1>${subject}</h1>
