@@ -6,11 +6,10 @@ export interface Message {
   html: string;
   type: MessageType;
   invitationLink?: string;
-  jobTitle?:string;
+  jobTitle?: string;
   kindSubject: string;
 }
 export enum MessageType {
   Email = 'email',
   Sms = 'sms',
 }
-

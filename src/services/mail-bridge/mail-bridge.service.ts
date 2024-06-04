@@ -7,19 +7,20 @@ import { readFile } from 'fs/promises';
 //הhtml פונקציה זו בודקת מה הסוג הודעה ולפי זה היא מפעילה פונקציה מתאימה שמחזירה את
 // ואז היא מפעילה את הפונקציה של שליחת המייל
 export class MailBridgeService {
-  constructor(private readonly messageService: MessageService) { }
+  constructor(private readonly messageService: MessageService) {}
 
   private async sendNewEmployeeEmail(message: any): Promise<string> {
     try {
-      const filePath = "src/EmployeeInvitationEmail/EmployeeInvitationEmail.html";
+      const filePath =
+        'src/EmployeeInvitationEmail/EmployeeInvitationEmail.html';
       const htmlContent = await readFile(filePath, 'utf-8');
       const personalizedHtml = htmlContent
-        .replace('[candidate\'s name]', message.name)
+        .replace("[candidate's name]", message.name)
         .replace('[job title]', message.jobTitle)
         .replace('[Invitation Link]', message.invitationLink);
       return personalizedHtml;
     } catch (error) {
-      console.error('Error reading HTML file:', error)
+      console.error('Error reading HTML file:', error);
       throw new Error('Failed to read HTML file for new employee email');
     }
   }
@@ -69,6 +70,3 @@ export class MailBridgeService {
       `;
   }
 }
-
-
-

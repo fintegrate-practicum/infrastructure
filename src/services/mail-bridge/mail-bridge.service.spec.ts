@@ -1,29 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailBridgeService } from './mail-bridge.service';
-import { MessageService } from '../message.service';
 import { readFile } from 'fs/promises';
 
 jest.mock('fs/promises');
 
 describe('MailBridgeService', () => {
   let service: MailBridgeService;
-  let messageService: MessageService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        MailBridgeService,
-        {
-          provide: MessageService,
-          useValue: {
-            sendMessage: jest.fn(),
-          },
-        },
-      ],
+      providers: [MailBridgeService],
     }).compile();
 
     service = module.get<MailBridgeService>(MailBridgeService);
-    messageService = module.get<MessageService>(MessageService);
   });
 
   it('should be defined', () => {

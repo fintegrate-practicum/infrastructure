@@ -6,4 +6,3 @@ export class RabbitConsumerService {
   @MessagePattern('message_queue')
   async handleEvent() {}
 }
-
