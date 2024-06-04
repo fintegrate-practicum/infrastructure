@@ -1,39 +1,64 @@
 import { Injectable } from '@nestjs/common';
 import { MessageService } from '../message.service';
 import { Message, MessageType } from '../../interface/message.interface';
+import { readFile } from 'fs/promises';
 
 @Injectable()
 //פונקציה זו מפעילה עבור כל סוג הודעה את הפוקנציה המתאימה לו
 export class MailBridgeService {
-  constructor(private readonly messageService: MessageService) {}
-  handleMessage(message: any): void {
-    switch (message.kindSubject) {
-      case 'message':
-        this.sendMessagetoEmail(message);
-        break;
-      default:
-        console.log('Unknown message type:', message.kindSubject);
+  constructor(private readonly messageService: MessageService) { }
+
+  private async sendNewEmployeeEmail(message: any): Promise<string> {
+    try {
+      const filePath = "src/EmployeeInvitationEmail/EmployeeInvitationEmail.html";
+      const htmlContent = await readFile(filePath, 'utf-8');
+      const personalizedHtml = htmlContent
+        .replace('[candidate\'s name]', message.name)
+        .replace('[job title]', message.jobTitle)
+        .replace('[Invitation Link]', message.invitationLink);
+      return personalizedHtml;
+    } catch (error) {
+      console.error('Error reading HTML file:', error)
+      throw new Error('Failed to read HTML file for new employee email');
     }
   }
 
-  private async sendMessagetoEmail(message: any): Promise<void> {
+  async handleMessage(message: any): Promise<void> {
+    let htmlContent: string;
+
+    try {
+      switch (message.kindSubject) {
+        case 'message':
+          htmlContent = await this.messageHtml(
+            message.to,
+            message.subject,
+            message.text,
+          );
+          break;
+        case 'new Employee':
+          htmlContent = await this.sendNewEmployeeEmail(message);
+          break;
+        default:
+          throw new Error(`Unknown kindSubject: ${message.kindSubject}`);
+      }
+    } catch (error) {
+      console.error('Error generating HTML content:', error);
+      htmlContent = 'Default HTML content';
+    }
+
     const formattedMessage: Message = {
       to: message.to,
       subject: message.subject,
-      html: this.generateMessageHtml(message.to, message.subject, message.text),
+      html: htmlContent,
       type: MessageType.Email,
       kindSubject: message.kindSubject,
     };
     await this.messageService.sendMessage(formattedMessage);
   }
 
-  private generateMessageHtml(
-    to: string,
-    subject: string,
-    text: string,
-  ): string {
+  private messageHtml(to: string, subject: string, text: string): string {
+
     //פה מחזירים איך רוצים שההודעה תראה במייל, html
-    //הפרטים פה מומצאים רק בשביל הרעיון אבל צריך לשלוח אותם בהודעה עצמה
     return `
         <h1>${subject}</h1>
         <p>Hello ${to},</p>
@@ -44,3 +69,6 @@ export class MailBridgeService {
       `;
   }
 }
+
+
+

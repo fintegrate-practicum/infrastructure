@@ -3,12 +3,14 @@ export interface Message {
   subject?: string;
   text?: string;
   name?: string;
-  // html: string;
+  html: string;
   type: MessageType;
-  invitationLink: string;
+  invitationLink?: string;
+  jobTitle?:string;
   kindSubject: string;
 }
 export enum MessageType {
   Email = 'email',
   Sms = 'sms',
 }
+
