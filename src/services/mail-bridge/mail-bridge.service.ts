@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MessageService } from '../message.service';
 import { Message, MessageType } from '../../interface/message.interface';
 import { log } from 'handlebars';
+import { TaskMessage } from 'src/interface/task-message.interface';
 
 @Injectable()
 //הhtml פונקציה זו בודקת מה הסוג הודעה ולפי זה היא מפעילה פונקציה מתאימה שמחזירה את
@@ -54,7 +55,7 @@ export class MailBridgeService {
       `;
   }
 
-  private messageHtmlNewTask(message: any): string {
+  private messageHtmlNewTask(message: TaskMessage): string {
     return `
         <h1>Assign a new task-${message.subject}</h1>
         <h2>hello ${message.name}</h2>
