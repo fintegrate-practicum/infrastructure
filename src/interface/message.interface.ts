@@ -3,8 +3,10 @@ export interface Message {
   subject?: string;
   text?: string;
   html: string;
-  type: MessageType;
-  kindSubject: string;
+  type: MessageType,
+  kindSubject: string,
+  numOrder?:string,
+  nameBussniesCode?:string
 }
 export enum MessageType {
   Email = 'email',

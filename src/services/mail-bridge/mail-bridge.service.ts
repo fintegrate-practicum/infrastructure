@@ -18,13 +18,13 @@ export class MailBridgeService {
             message.text,
           );
           break;
-        case 'orderMessage':
+        case 'orderMessage':   
           htmlContent= await this.orderMessageHtml(
            message.to,
            message.numOrder,
            message.nameBussniesCode,
-           message.logo
           )
+          break;
         // אפשר להוסיף כאן מקרים נוספים
         default:
           throw new Error(`Unknown kindSubject: ${message.kindSubject}`);
@@ -55,9 +55,8 @@ export class MailBridgeService {
       `;
   }
 
-  private orderMessageHtml(to:string,numOrder:string,nameBussniesCode:string,logo:string): string {
+  private orderMessageHtml(to:string,numOrder:string,nameBussniesCode:string): string {   
     return `
-    <div><img src="${logo}" alt="logo"></div>
     <h1> ${to} </h1>
     <h2>Your order will be accepted in the system</h2>
     <p>num order: ${numOrder}</p>
