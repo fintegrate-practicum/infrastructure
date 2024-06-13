@@ -21,7 +21,7 @@ export class EmailService {
 
     try {
       await this.mailgun.messages().send(data);
-      this.logger.log('email sent successfully');
+      this.logger.log('Email sent successfully');
     } catch (error) {
       this.logger.error('Error sending email:', error);
     }
