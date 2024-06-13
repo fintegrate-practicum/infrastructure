@@ -5,8 +5,12 @@ export interface Message {
   html: string;
   type: MessageType,
   kindSubject: string,
-  numOrder?:string,
-  nameBussniesCode?:string
+  numOrder?: string,
+  nameBussniesCode?: string,
+  dateOrder?: Date,
+  city?: string,
+  street?: string,
+  numBuild?: number
 }
 export enum MessageType {
   Email = 'email',
