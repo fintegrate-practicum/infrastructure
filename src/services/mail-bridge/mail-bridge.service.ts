@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { MessageService } from '../message.service';
 import { Message, MessageType } from '../../interface/message.interface';
+import { log } from 'handlebars';
+import { TaskMessage } from 'src/interface/task-message.interface';
 import { readFile } from 'fs/promises';
+
 
 @Injectable()
 //הhtml פונקציה זו בודקת מה הסוג הודעה ולפי זה היא מפעילה פונקציה מתאימה שמחזירה את
 // ואז היא מפעילה את הפונקציה של שליחת המייל
 export class MailBridgeService {
+
   constructor(private readonly messageService: MessageService) {}
 
   private async sendNewEmployeeEmail(message: any): Promise<string> {
@@ -25,6 +29,7 @@ export class MailBridgeService {
     }
   }
 
+
   async handleMessage(message: any): Promise<void> {
     let htmlContent: string;
 
@@ -35,6 +40,11 @@ export class MailBridgeService {
             message.to,
             message.subject,
             message.text,
+          );
+          break;
+        case 'newTask':
+          htmlContent = await this.messageHtmlNewTask(
+            message
           );
           break;
         case 'new Employee':
@@ -67,6 +77,25 @@ export class MailBridgeService {
         <p>How are you?</p>
         <p>Best regards,</p>
         <p>RabbitMq</p>
+      `;
+  }
+
+  private messageHtmlNewTask(message: TaskMessage): string {
+    return `
+        <h1>Assign a new task-${message.subject}</h1>
+        <h2>hello ${message.name}</h2>
+        <h2>A new task has been assigned for you:${message.subject}</h2>
+        <p>Mission description:
+        ${message.description}
+        </p>
+        <h2>Due Date: ${message.date}</h2>
+        <p>
+        Please let me know if you have any questions about the assignment.</br>
+        I trust you to carry out the task in the best possible way.</br>
+        Successfully,
+        </p>
+        <h2>${message.managerName}</h2>
+
       `;
   }
 }
