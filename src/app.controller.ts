@@ -7,7 +7,7 @@ import { MailBridgeService } from './services/mail-bridge/mail-bridge.service';
 export class AppController {
   constructor(private readonly handleMessage: MailBridgeService) {}
 
-  @MessagePattern('message_queue')
+  @MessagePattern('message_exchange')
   async handleEvent(@Payload() message: Message) {
     await this.handleMessage.handleMessage(message);
     //take care of message
