@@ -8,6 +8,7 @@ export interface Message {
   invitationLink?: string;
   jobTitle?: string;
   kindSubject: string;
+  code?:string
 }
 export enum MessageType {
   Email = 'email',
