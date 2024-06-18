@@ -3,6 +3,6 @@ import { MessagePattern } from '@nestjs/microservices';
 
 @Injectable()
 export class RabbitConsumerService {
-  @MessagePattern('message_queue')
+  @MessagePattern('message_exchange')
   async handleEvent() {}
 }
