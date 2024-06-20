@@ -37,6 +37,7 @@ export class MailBridgeService {
             message.text,
           );
           break;
+
         case 'orderMessage':   
           htmlContent= this.orderMessageHtml(
             message.to,

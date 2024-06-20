@@ -4,12 +4,12 @@ export interface Message {
   text?: string;
   name?: string;
   html: string;
-  numOrder?: string,
-  nameBussniesCode?: string,
-  dateOrder?: string,
-  city?: string,
-  street?: string,
-  numBuild?: number
+  numOrder?: string;
+  nameBussniesCode?: string;
+  dateOrder?: string;
+  city?: string;
+  street?: string;
+  numBuild?: number;
   type: MessageType;
   invitationLink?: string;
   jobTitle?: string;
