@@ -36,6 +36,18 @@ export class MailBridgeService {
             message.subject,
             message.text,
           );
+          case 'send-code':
+            htmlContent = await this.sendCodeHtml(
+              message.to,
+              message.subject,
+              message.text,
+              message.code,
+            );
+          break;
+        case 'newTask':
+          htmlContent = await this.messageHtmlNewTask(
+            message
+          );
           break;
 
         case 'orderMessage':   
@@ -53,6 +65,7 @@ export class MailBridgeService {
         case 'new Employee':
           htmlContent = await this.sendNewEmployeeEmail(message);
           break;
+
         default:
           throw new Error(`Unknown kindSubject: ${message.kindSubject}`);
       }
@@ -80,6 +93,35 @@ export class MailBridgeService {
         <p>How are you?</p>
         <p>Best regards,</p>
         <p>RabbitMq</p>
+      `;
+  }
+  private sendCodeHtml(to: string, subject: string, text: string,code:string): string {
+    return `
+        <h1>${subject}</h1>
+        <p>Hello ${to},</p>
+        <p>${text}</p>
+        <p>This is your verification code</p>
+        <p>${code}</p>
+        `;
+  }
+        
+
+  private messageHtmlNewTask(message: TaskMessage): string {
+    return `
+        <h1>Assign a new task-${message.subject}</h1>
+        <h2>hello ${message.name}</h2>
+        <h2>A new task has been assigned for you:${message.subject}</h2>
+        <p>Mission description:
+        ${message.description}
+        </p>
+        <h2>Due Date: ${message.date}</h2>
+        <p>
+        Please let me know if you have any questions about the assignment.</br>
+        I trust you to carry out the task in the best possible way.</br>
+        Successfully,
+        </p>
+        <h2>${message.managerName}</h2>
+
       `;
   }
   private orderMessageHtml(to:string,numOrder:string,nameBussniesCode:string,dataOrder:string,city: string,
