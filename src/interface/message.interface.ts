@@ -2,15 +2,18 @@ export interface Message {
   to: string;
   subject?: string;
   text?: string;
+  name?: string;
   html: string;
-  type: MessageType,
-  kindSubject: string,
   numOrder?: string,
   nameBussniesCode?: string,
-  dateOrder?: Date,
+  dateOrder?: string,
   city?: string,
   street?: string,
   numBuild?: number
+  type: MessageType;
+  invitationLink?: string;
+  jobTitle?: string;
+  kindSubject: string;
 }
 export enum MessageType {
   Email = 'email',

@@ -1,14 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { MessageService } from '../message.service';
 import { Message, MessageType } from '../../interface/message.interface';
+import { readFile } from 'fs/promises';
 
 @Injectable()
 //הhtml פונקציה זו בודקת מה הסוג הודעה ולפי זה היא מפעילה פונקציה מתאימה שמחזירה את
 // ואז היא מפעילה את הפונקציה של שליחת המייל
 export class MailBridgeService {
   constructor(private readonly messageService: MessageService) {}
+
+  private async sendNewEmployeeEmail(message: any): Promise<string> {
+    try {
+      const filePath =
+        'src/EmployeeInvitationEmail/EmployeeInvitationEmail.html';
+      const htmlContent = await readFile(filePath, 'utf-8');
+      const personalizedHtml = htmlContent
+        .replace("[candidate's name]", message.name)
+        .replace('[job title]', message.jobTitle)
+        .replace('[Invitation Link]', message.invitationLink);
+      return personalizedHtml;
+    } catch (error) {
+      console.error('Error reading HTML file:', error);
+      throw new Error('Failed to read HTML file for new employee email');
+    }
+  }
+
   async handleMessage(message: any): Promise<void> {
     let htmlContent: string;
+
     try {
       switch (message.kindSubject) {
         case 'message':
@@ -19,17 +38,20 @@ export class MailBridgeService {
           );
           break;
         case 'orderMessage':   
-          htmlContent= await this.orderMessageHtml(
-           message.to,
-           message.numOrder,
-           message.nameBussniesCode,
-           message.dateOrder,
-           message.city,
-           message.street,
-           message.numBuild
+          htmlContent= this.orderMessageHtml(
+            message.to,
+            message.numOrder,
+            message.nameBussniesCode,
+            message.dateOrder,
+            message.city,
+            message.street,
+            message.numBuild
           )
           break;
         // אפשר להוסיף כאן מקרים נוספים
+        case 'new Employee':
+          htmlContent = await this.sendNewEmployeeEmail(message);
+          break;
         default:
           throw new Error(`Unknown kindSubject: ${message.kindSubject}`);
       }
@@ -37,6 +59,7 @@ export class MailBridgeService {
       console.error('Error generating HTML content:', error);
       htmlContent = 'Default HTML content';
     }
+
     const formattedMessage: Message = {
       to: message.to,
       subject: message.subject,
@@ -58,16 +81,8 @@ export class MailBridgeService {
         <p>RabbitMq</p>
       `;
   }
-  private formatDate(date) {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${month}/${day}/${year}`;
-}
-
-  private orderMessageHtml(to:string,numOrder:string,nameBussniesCode:string,dateOrder:Date,city: string,
+  private orderMessageHtml(to:string,numOrder:string,nameBussniesCode:string,dataOrder:string,city: string,
     street: string,numBuild: number): string {   
-    
     return` 
     <p><strong>Subject: Your Order Confirmation from ${nameBussniesCode}</strong></p>
 
@@ -78,7 +93,8 @@ export class MailBridgeService {
     <p><strong>Order Details:</strong></p>
     <ul>
         <li>Order Number: ${numOrder}</li>
-        <li>Order Date: ${this.formatDate(dateOrder)}</li>
+        // <li>Order Date: ${dataOrder}</li>
+
         <li>Total Price: [Total Price]</li>
     </ul>
 
