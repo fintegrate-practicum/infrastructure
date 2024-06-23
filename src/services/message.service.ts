@@ -22,9 +22,15 @@ export class MessageService {
   }
 
   private async sendEmail(message: Message): Promise<void> {
-    const { to, subject, html } = message;
+    const { to, subject, html, kindSubject, businessId } = message;
     console.log(message);
-    await this.mailerService.sendEmail(to, subject, html);
+    await this.mailerService.sendEmail(
+      to,
+      subject,
+      html,
+      kindSubject,
+      businessId,
+    );
   }
 
   private async sendSms(message: Message): Promise<void> {

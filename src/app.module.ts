@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consumer.service';
-import { EmailModule } from './modules/email.module';
 import { EmailService } from './services/email.service';
-import { ConfigModule } from '@nestjs/config';
 import { MessageService } from './services/message.service';
 import { MailBridgeService } from './services/mail-bridge/mail-bridge.service';
-
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EmailLogModule } from './email-log/module/email-log.module';
+import { EmailModule } from './modules/email.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -15,6 +16,14 @@ import { MailBridgeService } from './services/mail-bridge/mail-bridge.service';
       isGlobal: true,
     }),
     EmailModule,
+    EmailLogModule,
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => ({
+        uri: config.get<string>('DATABASE_URI'),
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
   providers: [

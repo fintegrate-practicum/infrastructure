@@ -1,16 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { MessageService } from '../message.service';
 import { Message, MessageType } from '../../interface/message.interface';
-import { log } from 'handlebars';
 import { TaskMessage } from 'src/interface/task-message.interface';
 import { readFile } from 'fs/promises';
-
 
 @Injectable()
 //הhtml פונקציה זו בודקת מה הסוג הודעה ולפי זה היא מפעילה פונקציה מתאימה שמחזירה את
 // ואז היא מפעילה את הפונקציה של שליחת המייל
 export class MailBridgeService {
-
   constructor(private readonly messageService: MessageService) {}
 
   private async sendNewEmployeeEmail(message: any): Promise<string> {
@@ -29,7 +26,6 @@ export class MailBridgeService {
     }
   }
 
-
   async handleMessage(message: any): Promise<void> {
     let htmlContent: string;
 
@@ -41,18 +37,16 @@ export class MailBridgeService {
             message.subject,
             message.text,
           );
-          case 'send-code':
-            htmlContent = await this.sendCodeHtml(
-              message.to,
-              message.subject,
-              message.text,
-              message.code,
-            );
+        case 'send-code':
+          htmlContent = await this.sendCodeHtml(
+            message.to,
+            message.subject,
+            message.text,
+            message.code,
+          );
           break;
         case 'newTask':
-          htmlContent = await this.messageHtmlNewTask(
-            message
-          );
+          htmlContent = await this.messageHtmlNewTask(message);
           break;
         case 'new Employee':
           htmlContent = await this.sendNewEmployeeEmail(message);
@@ -71,6 +65,7 @@ export class MailBridgeService {
       html: htmlContent,
       type: MessageType.Email,
       kindSubject: message.kindSubject,
+      businessId: message.businessId,
     };
     await this.messageService.sendMessage(formattedMessage);
   }
@@ -86,7 +81,12 @@ export class MailBridgeService {
         <p>RabbitMq</p>
       `;
   }
-  private sendCodeHtml(to: string, subject: string, text: string,code:string): string {
+  private sendCodeHtml(
+    to: string,
+    subject: string,
+    text: string,
+    code: string,
+  ): string {
     return `
         <h1>${subject}</h1>
         <p>Hello ${to},</p>
@@ -95,7 +95,6 @@ export class MailBridgeService {
         <p>${code}</p>
         `;
   }
-        
 
   private messageHtmlNewTask(message: TaskMessage): string {
     return `
