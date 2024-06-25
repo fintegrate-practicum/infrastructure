@@ -18,7 +18,7 @@ export class EmailLog {
   recipient: string;
 
   @Prop()
-  errorMessage: string;
+  errorMessage?: string;
 
   @Prop({ required: true })
   timestamp: Date;

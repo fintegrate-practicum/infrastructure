@@ -6,6 +6,8 @@ import {
   CreateEmailLogDto,
   UpdateEmailLogDto,
 } from '../email-log/dto/email-log.dto';
+import { EmailLogStatus } from 'src/email-log/email-log-status.enum';
+import { EmailLogDocument } from '../email-log/schemas/email-log.schema';
 
 @Injectable()
 export class EmailService {
@@ -31,14 +33,15 @@ export class EmailService {
     businessId: string,
   ) {
     const createEmailLogDto: CreateEmailLogDto = {
-      status: 'sent',
+      status: EmailLogStatus.PENDING,
       kindSubject,
       businessId,
       recipient: to,
       timestamp: new Date(),
     };
 
-    const emailLog = await this.emailLogService.create(createEmailLogDto);
+    const emailLog: EmailLogDocument =
+      await this.emailLogService.create(createEmailLogDto);
 
     const data = {
       from: this.configService.get<string>('MAILGUN_EMAIL'),
@@ -52,20 +55,26 @@ export class EmailService {
       this.logger.log('Email sent successfully');
 
       const updateEmailLogDto: UpdateEmailLogDto = {
-        status: 'sent',
+        status: EmailLogStatus.SENT,
       };
       await this.emailLogService.update(
-        emailLog.businessId, // אין צורך בהמרה ל-string, כבר מחרוזת
+        emailLog._id.toString(), // שימוש ב-ID של ה-EmailLog
         updateEmailLogDto,
       );
     } catch (error) {
       this.logger.error('Error sending email:', error);
 
       const updateEmailLogDto: UpdateEmailLogDto = {
-        status: 'failed',
+        status: EmailLogStatus.FAILED,
         errorMessage: error.message,
       };
-      await this.emailLogService.update(emailLog.businessId, updateEmailLogDto);
+      await this.emailLogService.update(
+        emailLog._id.toString(),
+        updateEmailLogDto,
+      );
     }
+  }
+  async getEmailLogById(id: string): Promise<EmailLogDocument> {
+    return this.emailLogService.findById(id);
   }
 }

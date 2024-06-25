@@ -1,8 +1,9 @@
-import { IsString, IsDate } from 'class-validator';
+import { IsString, IsDate, IsEnum, IsOptional } from 'class-validator';
+import { EmailLogStatus } from '../email-log-status.enum';
 
 export class CreateEmailLogDto {
-  @IsString()
-  status: string;
+  @IsEnum(EmailLogStatus)
+  status: EmailLogStatus;
 
   @IsString()
   kindSubject: string;
@@ -15,15 +16,13 @@ export class CreateEmailLogDto {
 
   @IsDate()
   timestamp: Date;
-
-  @IsString()
-  errorMessage?: string;
 }
 
 export class UpdateEmailLogDto {
-  @IsString()
-  status: string;
+  @IsEnum(EmailLogStatus)
+  status: EmailLogStatus;
 
   @IsString()
+  @IsOptional()
   errorMessage?: string;
 }
