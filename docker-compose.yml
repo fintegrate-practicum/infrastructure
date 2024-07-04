@@ -15,7 +15,7 @@ services:
       MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
     ports:
-      - 4000:4000
+      - 4002:4000
       - 9229:9229
     networks:
       - nesjs-network
