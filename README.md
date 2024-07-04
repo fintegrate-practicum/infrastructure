@@ -14,3 +14,24 @@ cd infrastructure
 ```bash
 docker-compose up -d
 ```
+
+5. Copy .env file & run the infra service:
+```bash
+cd ../infra
+npm install
+npm run start:dev
+```
+
+6. Copy .env file & run the orders service:
+```bash
+cd ../orders
+npm install
+npm run start:dev
+```
+
+7. Copy .env file & run the website service:
+```bash
+cd ../website
+npm install
+npm run dev
+```
