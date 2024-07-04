@@ -1,0 +1,101 @@
+version: '3.8'
+services:
+  communication:
+    build:
+      context: ../communication
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URI: ${MONGO_URI}
+      RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
+      RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
+      AMQP_USERNAME: ${RABBITMQ_DEFAULT_USER}
+      AMQP_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
+      URL: ${AMQP_URL}
+      MAILGUN_API_KEY: ${MAILGUN_API_KEY}
+      MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
+      MAILGUN_EMAIL: ${MAILGUN_EMAIL}
+    ports:
+      - 4000:4000
+      - 9229:9229
+    networks:
+      - nesjs-network
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  workers:
+    build:
+      context: ../workers/workers-backend
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_CONNECTION: ${MONGO_URI}
+      AMQP_HOST: ${AMQP_HOST}
+      AMQP_PORT: ${AMQP_PORT}
+      AMQP_USERNAME: ${RABBITMQ_DEFAULT_USER}
+      AMQP_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
+      RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+    ports:
+      - 4001:4000
+      - 9228:9229
+    networks:
+      - nesjs-network
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  inventory:
+    build:
+      context: ../inventory
+      dockerfile: Dockerfile
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      DB_NAME: ${DB_NAME}
+    ports:
+      - 3000:3000
+      - 9227:9229
+    networks:
+      - nesjs-network
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+# infra
+# orders
+# website
+
+  mongodb:
+    image : mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${Fintegrate}
+      MONGO_INITDB_ROOT_PASSWORD: ${BSR4Practicum2024}
+      MONGO_INITDB_DATABASE: ${Communication}
+    ports:
+      - "${MONGODB_PORT}:27017"
+    volumes:
+      - ./database:/data/db
+    networks:
+      - nesjs-network
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "${AMQP_PORT}:5672"
+    volumes:
+      - ./rabbitmq/data/:/var/lib/rabbitmq
+      - ./rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - nesjs-network
+    restart: always
+
+networks:
+  nesjs-network:
+    driver: bridge
+ 
