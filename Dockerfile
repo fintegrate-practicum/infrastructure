@@ -16,7 +16,7 @@ RUN npm i reflect-metadata
 
 RUN npm run build
 
-EXPOSE 4000
+EXPOSE 4156
 
 CMD [ "node", "dist/main" ]
 
