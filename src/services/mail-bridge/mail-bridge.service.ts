@@ -14,14 +14,14 @@ export class MailBridgeService {
     try {
       const filePath = 'src/EmployeeInvitationEmail/EmployeeInvitationEmail.html';
       const htmlContent = await readFile(filePath, 'utf-8');
-      const placeholders = {
+      const ReplaceableElements = {
         "[candidate's name]": message.name,
         '[job title]': message.jobTitle,
         '[Invitation Link]': message.invitationLink,
       };
       let personalizedHtml = htmlContent;
-      for (const placeholder in placeholders) {
-        personalizedHtml = personalizedHtml.replace(placeholder, placeholders[placeholder]);
+      for (const placeholder in ReplaceableElements) {
+        personalizedHtml = personalizedHtml.replace(placeholder, ReplaceableElements[placeholder]);
       }
       return personalizedHtml;
     } catch (error) {
@@ -92,14 +92,14 @@ export class MailBridgeService {
     try {
       const filePath = 'src/EmployeeInvitationEmail/EmployeeMessageEmail.html';
       const htmlContent = await readFile(filePath, 'utf-8');
-      const placeholders = {
+      const ReplaceableElements = {
         '[Name]': to,
         '[Subject]': subject,
         '[content of the message]': text,
       };
       let personalizedHtml = htmlContent;
-      for (const placeholder in placeholders) {
-        personalizedHtml = personalizedHtml.replace(placeholder, placeholders[placeholder]);
+      for (const placeholder in ReplaceableElements) {
+        personalizedHtml = personalizedHtml.replace(placeholder, ReplaceableElements[placeholder]);
       }
       return personalizedHtml;
     } catch (error) {
@@ -112,15 +112,15 @@ export class MailBridgeService {
     try {
       const filePath = 'src/EmployeeInvitationEmail/EmployeeSendCodeEmail.html';
       const htmlContent = await readFile(filePath, 'utf-8');
-      const placeholders = {
+      const ReplaceableElements = {
         '[Name]': to,
         '[Subject]': subject,
         '[content of the message]': text,
         '[code]': code,
       };
       let personalizedHtml = htmlContent;
-      for (const placeholder in placeholders) {
-        personalizedHtml = personalizedHtml.replace(placeholder, placeholders[placeholder]);
+      for (const placeholder in ReplaceableElements) {
+        personalizedHtml = personalizedHtml.replace(placeholder, ReplaceableElements[placeholder]);
       }
       return personalizedHtml;
     } catch (error) {
@@ -155,15 +155,8 @@ export class MailBridgeService {
     }
   }
   
-  private orderMessageHtml(
-    to: string,
-    numOrder: string,
-    nameBussniesCode: string,
-    dataOrder: string,
-    city: string,
-    street: string,
-    numBuild: number,
-  ): string {
+  private orderMessageHtml(to: string,numOrder: string,nameBussniesCode: string,dataOrder: string,city: string,
+    street: string,numBuild: number,): string {
     return ` 
     <p><strong>Subject: Your Order Confirmation from ${nameBussniesCode}</strong></p>
 
