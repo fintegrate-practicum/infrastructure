@@ -25,7 +25,7 @@ services:
 
   workers:
     build:
-      context: ../workers/workers-backend
+      context: ../workers
       dockerfile: Dockerfile
     environment:
       MONGODB_CONNECTION: ${MONGO_URI}
