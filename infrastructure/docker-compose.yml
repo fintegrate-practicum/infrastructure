@@ -56,7 +56,7 @@ services:
       MONGO_URI: ${MONGO_URI}
       DB_NAME: ${DB_NAME}
     ports:
-      - 4003:4000
+      - 4003:3000
       - 9227:9229
     networks:
       - nesjs-network
