@@ -1,3 +1,4 @@
+ #!/usr/bin/env sh
 version: '3.8'
 
 services:
@@ -56,7 +57,7 @@ services:
       MONGO_URI: ${MONGO_URI}
       DB_NAME: ${DB_NAME}
     ports:
-      - 4003:3000
+      - 4003:4000
       - 9227:9229
     networks:
       - nesjs-network
@@ -80,7 +81,7 @@ services:
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
     ports:
-      - 4004:8787
+      - 4004:4000
       - 9226:9229
     networks:
       - nesjs-network
@@ -128,7 +129,7 @@ services:
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
     ports:
-      - 4006:3001
+      - 4006:4000
       - 9224:9229
     networks:
       - nesjs-network
