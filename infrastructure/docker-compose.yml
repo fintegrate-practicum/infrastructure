@@ -1,4 +1,6 @@
+ #!/usr/bin/env sh
 version: '3.8'
+
 services:
   communication:
     build:
@@ -15,7 +17,7 @@ services:
       MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
     ports:
-      - 4002:4000
+      - 4001:4000
       - 9229:9229
     networks:
       - nesjs-network
@@ -23,9 +25,9 @@ services:
       - mongodb
     restart: unless-stopped
 
-  workers:
+  infra:
     build:
-      context: ../workers/workers-backend
+      context: ../infra
       dockerfile: Dockerfile
     environment:
       MONGODB_CONNECTION: ${MONGO_URI}
@@ -39,7 +41,7 @@ services:
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
     ports:
-      - 4001:4000
+      - 4002:4000
       - 9228:9229
     networks:
       - nesjs-network
@@ -55,7 +57,7 @@ services:
       MONGO_URI: ${MONGO_URI}
       DB_NAME: ${DB_NAME}
     ports:
-      - 3000:3000
+      - 4003:4000
       - 9227:9229
     networks:
       - nesjs-network
@@ -63,12 +65,80 @@ services:
       - mongodb
     restart: unless-stopped
 
-# infra
-# orders
-# website
+  orders:
+    build:
+      context: ../orders
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_CONNECTION: ${MONGO_URI}
+      AMQP_HOST: ${AMQP_HOST}
+      AMQP_PORT: ${AMQP_PORT}
+      AMQP_USERNAME: ${RABBITMQ_DEFAULT_USER}
+      AMQP_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
+      RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+    ports:
+      - 4004:4000
+      - 9226:9229
+    networks:
+      - nesjs-network
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  website:
+    build:
+      context: ../website
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_CONNECTION: ${MONGO_URI}
+      AMQP_HOST: ${AMQP_HOST}
+      AMQP_PORT: ${AMQP_PORT}
+      AMQP_USERNAME: ${RABBITMQ_DEFAULT_USER}
+      AMQP_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
+      RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+    ports:
+      - 4005:5173
+      - 9225:9229
+    networks:
+      - nesjs-network
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  workers:
+    build:
+      context: ../workers
+      dockerfile: Dockerfile
+    environment:
+      MONGODB_CONNECTION: ${MONGO_URI}
+      AMQP_HOST: ${AMQP_HOST}
+      AMQP_PORT: ${AMQP_PORT}
+      AMQP_USERNAME: ${RABBITMQ_DEFAULT_USER}
+      AMQP_PASSWORD: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
+      RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+    ports:
+      - 4006:4000
+      - 9224:9229
+    networks:
+      - nesjs-network
+    depends_on:
+      - mongodb
+    restart: unless-stopped
 
   mongodb:
-    image : mongo:latest
+    image: mongo:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${Fintegrate}
       MONGO_INITDB_ROOT_PASSWORD: ${BSR4Practicum2024}
@@ -98,4 +168,3 @@ services:
 networks:
   nesjs-network:
     driver: bridge
- 
