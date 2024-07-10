@@ -129,7 +129,7 @@ services:
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
     ports:
-      - 4006:4000
+      - 4006:3001
       - 9224:9229
     networks:
       - nesjs-network
