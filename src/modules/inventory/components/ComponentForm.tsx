@@ -63,13 +63,13 @@ export const ComponentForm: React.FC<IComponent> = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit(save)}>
+        <form onSubmit={handleSubmit(save)} noValidate autoComplete="off">
             {!errors.name ?
-                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} >
                     <TextField id="outlined-basic" label="name" variant="outlined" {...register("name")} />
                 </Box>
                 :
-                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} >
                     <TextField
                         error
                         id="outlined-error-helper-text"
@@ -81,11 +81,11 @@ export const ComponentForm: React.FC<IComponent> = () => {
                 </Box>
             }
             {!errors.purchasePrice ?
-                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} >
                     <TextField id="outlined-basic" label="purchase price" variant="outlined" {...register("purchasePrice")} />
                 </Box>
                 :
-                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} >
                     <TextField
                         error
                         id="outlined-error-helper-text"
@@ -105,11 +105,11 @@ export const ComponentForm: React.FC<IComponent> = () => {
             {isAloneChecked && (
                 <>
                     {!errors.description ?
-                        <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                        <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} >
                             <TextField id="outlined-basic" label="description" variant="outlined" {...register("description")} />
                         </Box>
                         :
-                        <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                        <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} >
                             <TextField
                                 error
                                 id="outlined-error-helper-text"
@@ -122,11 +122,11 @@ export const ComponentForm: React.FC<IComponent> = () => {
                     }
 
                     {!errors.salePrice ?
-                        <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                        <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} >
                             <TextField id="outlined-basic" label="sale price" variant="outlined" {...register("salePrice")} />
                         </Box>
                         :
-                        <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                        <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }}>
                             <TextField
                                 error
                                 id="outlined-error-helper-text"

@@ -14,7 +14,8 @@ const AddProductForm=()=>{
   const productSchema = yup.object().shape({
     name: yup.string().required("productName is a required field").min(3, "productName must be at least 3 characters").max(20, "productName must be at most 20 characters"),
     description: yup.string().required("productDescription is a required field"),
-    totalPrice: yup.string().required("purchase price is a required field").matches(/^[0-9]+(\.[0-9]{1,2})?$/, "price must be a number"),
+    // totalPrice: yup.number().required("purchase price is a required field").matches(/^[0-9]+(\.[0-9]{1,2})?$/, "price must be a number"),
+    totalPrice: yup.number().required("Purchase price is a required field").typeError("Price must be a number").positive("Price must be a positive number").integer("Price must be an integer").nullable(true),
     componentsImages: yup.array().min(1, "must be at least 1").max(5, "must be at most 5").required('please select an image')
 });
 
@@ -22,22 +23,22 @@ const AddProductForm=()=>{
   useForm<IProduct>({ resolver:  yupResolver(productSchema) });
     const dispatch=useDispatch();
     const onSubmit: SubmitHandler<IProduct> = async (data) => {
-      if (selectedImages) {
+    //   if (selectedImages) {
           try {
               const formData = new FormData();
               formData.append('Name', data.name);
               formData.append('Description', data.description);
               formData.append('Price', data.totalPrice.toString());
-              Array.from(selectedImages).forEach((image) => {
-                  formData.append('componentsImages', image);
-              });
+            //   Array.from(selectedImages).forEach((image) => {
+            //       formData.append('componentsImages', image);
+            //   });
           } catch (error) {
               console.error('שגיאה בהוספת מוצר:', error);
               // טפל במקרה של שגיאה
           }
-      } else {
-          console.error("No images selected!");
-      }
+    //   } else {
+    //       console.error("No images selected!");
+    //   }
   };
     const navigate = useNavigate();
     const productState = useSelector((state: any) => state.product);
@@ -57,13 +58,13 @@ const AddProductForm=()=>{
     }
 };
     return (
-         <form onSubmit={handleSubmit(onSubmit)}>
+         <form onSubmit={handleSubmit(onSubmit)}noValidate autoComplete="off">
              {!errors.name?
-                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} >
                     <TextField id="outlined-basic" label="name" variant="outlined" {...register("name")} />
                 </Box>
                 :
-                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} >
                     <TextField
                         error
                         id="outlined-error-helper-text"
@@ -76,11 +77,11 @@ const AddProductForm=()=>{
             }
 
            {!errors.description ?
-                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} >
                     <TextField id="outlined-basic" label="description" variant="outlined" {...register("description")} />
                 </Box>
                 :
-                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} >
                     <TextField
                         error
                         id="outlined-error-helper-text"
@@ -96,11 +97,11 @@ const AddProductForm=()=>{
             <input type="file" multiple onChange={handleImageChange} />
             {errors.componentsImages && <p>{errors.componentsImages.message}</p>}
             {!errors.totalPrice ?
-                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} >
                     <TextField id="outlined-basic" label="price" variant="outlined" {...register("totalPrice")} />
                 </Box>
                 :
-                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
+                <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} >
                     <TextField
                         error
                         id="outlined-error-helper-text"
