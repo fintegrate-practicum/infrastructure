@@ -58,7 +58,7 @@ export const ComponentForm: React.FC<IComponent> = () => {
         const files = event.target.files;
         if (files) {
             setSelectedFiles(Array.from(files));
-            setValue('images', Array.from(files));
+            // setValue('images', Array.from(files));
         }
     };
 
