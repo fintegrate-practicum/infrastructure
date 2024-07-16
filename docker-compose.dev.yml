@@ -3,7 +3,7 @@ services:
   communication:
     build:
       context: ../communication
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     environment:
       DATABASE_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
@@ -28,7 +28,7 @@ services:
   infra:
     build:
       context: ../infra
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     environment:
       MONGODB_CONNECTION: ${MONGO_URI}
       MONGODB_URI: ${MONGODB_URI}
@@ -53,7 +53,7 @@ services:
   inventory:
     build:
       context: ../inventory
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     environment:
       MONGO_URI: ${MONGO_URI}
       DB_NAME: ${DB_NAME}
@@ -69,7 +69,7 @@ services:
   orders:
     build:
       context: ../orders
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     environment:
       MONGODB_CONNECTION: ${MONGO_URI}
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
@@ -91,7 +91,7 @@ services:
   website:
     build:
       context: ../website
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     environment:
       REACT_APP_API_URL: ${REACT_APP_API_URL}
       VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
@@ -115,7 +115,7 @@ services:
   workers:
     build:
       context: ../workers
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     environment:
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
