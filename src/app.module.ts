@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consumer.service';
@@ -10,9 +10,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailLogModule } from './email-log/module/email-log.module';
 import { EmailModule } from './modules/email.module';
 import { EmailSettingsModule } from './email-settings/modules/email-settings.module';
+
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ envFilePath: '.env' }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -22,7 +23,7 @@ import { EmailSettingsModule } from './email-settings/modules/email-settings.mod
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('DATABASE_URI'),
+        uri: process.env.MONGODB_URI,
       }),
       inject: [ConfigService],
     }),
@@ -36,4 +37,14 @@ import { EmailSettingsModule } from './email-settings/modules/email-settings.mod
     MailBridgeService,
   ],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  async onModuleInit() {
+    try {
+      // הודעה כאשר התחברות למסד הנתונים מוצלחת
+      console.log('Connected to MongoDB successfully!');
+    } catch (error) {
+      // הודעת שגיאה אם יש בעיה בהתחברות למסד הנתונים
+      console.error('Failed to connect to MongoDB:', error);
+    }
+  }
+}
