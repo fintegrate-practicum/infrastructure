@@ -32,14 +32,16 @@ services:
       MONGODB_URI: ${MONGODB_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
-      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
-      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
-      AMQP_PORT: ${AMQP_PORT}
       AMQP_HOST: ${AMQP_HOST}
+      AMQP_PORT: ${AMQP_PORT}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
+      WORKERS_SERVICE_URL: ${WORKERS_SERVICE_URL}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+
     ports:
-      - 4002:4000
+      - 4002:3000
     networks:
       - nesjs-network
     depends_on:
@@ -61,50 +63,53 @@ services:
       - mongodb
     restart: unless-stopped
 
-  # orders:
-  #   build:
-  #     context: ../orders
-  #     dockerfile: Dockerfile.prod 
-  #   environment:
-  #     MONGODB_CONNECTION: ${MONGO_URI}
-  #     MAILGUN_EMAIL: ${MAILGUN_EMAIL}
-  #     BASE_URL: ${baseURL}
-  #     AMQP_PORT: ${AMQP_PORT}
-  #     AMQP_HOST: ${AMQP_HOST}
-  #     AMQP_USERNAME: ${AMQP_USERNAME}
-  #     AMQP_PASSWORD: ${AMQP_PASSWORD}
-  #     MONGODB_URI: ${MONGODB_URI}
-  #   ports:
-  #     - 4004:4000
-  #   networks:
-  #     - nesjs-network
-  #   depends_on:
-  #     - mongodb
-  #   restart: unless-stopped
+  orders:
+    build:
+      context: ../orders
+      dockerfile: Dockerfile.prod 
+    environment:
+      MONGODB_CONNECTION: ${MONGO_URI}
+      BASE_URL: ${baseURL}
+      AMQP_HOST: ${AMQP_HOST}
+      AMQP_PORT: ${AMQP_PORT}
+      AMQP_USERNAME: ${AMQP_USERNAME}
+      AMQP_PASSWORD: ${AMQP_PASSWORD}
+      MONGODB_URI: ${MONGODB_URI}
+      ENV: ${ENV}
+      MAILGUN_EMAIL: ${MAILGUN_EMAIL}
 
-  # website:
-  #   build:
-  #     context: ../website
-  #     dockerfile: Dockerfile.prod 
-  #   environment:
-  #     REACT_APP_API_URL: ${REACT_APP_API_URL}
-  #     VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
-  #     VITE_AUTH0_CLIENT_ID: ${VITE_AUTH0_CLIENT_ID}
-  #     VITE_AUTH0_AUDIENCE: ${VITE_AUTH0_AUDIENCE}
-  #     VITE_INFRA_SERVER_URL: ${VITE_INFRA_SERVER_URL}
-  #     VITE_WORKERS_SERVER_URL: ${VITE_WORKERS_SERVER_URL}
-  #     VITE_SERVER_URL: ${VITE_SERVER_URL}
-  #     VITE_BUSINESSID: ${VITE_BUSINESSID}
-  #     VITE_MANAGERID: ${VITE_MANAGERID}
-  #     VITE_BASE_API_URL: ${VITE_BASE_API_URL}
-  #     VITE_HTTP: ${VITE_HTTP}
-  #   ports:
-  #     - 4005:5173
-  #   networks:
-  #     - nesjs-network
-  #   depends_on:
-  #     - mongodb
-  #   restart: unless-stopped
+    ports:
+      - 4004:4000
+    networks:
+      - nesjs-network
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  website:
+    build:
+      context: ../website
+      dockerfile: Dockerfile.prod 
+    environment:
+      VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
+      VITE_AUTH0_CLIENT_ID: ${VITE_AUTH0_CLIENT_ID}
+      VITE_AUTH0_AUDIENCE: ${VITE_AUTH0_AUDIENCE}
+      VITE_INFRA_SERVER_URL: ${VITE_INFRA_SERVER_URL}
+      VITE_WORKERS_SERVER_URL: ${VITE_WORKERS_SERVER_URL}
+      VITE_SERVER_URL: ${VITE_SERVER_URL}
+      VITE_BUSINESSID: ${VITE_BUSINESSID}
+      VITE_MANAGERID: ${VITE_MANAGERID}
+      VITE_BASE_API_URL: ${VITE_BASE_API_URL}
+      VITE_HTTP: ${VITE_HTTP}
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+
+    ports:
+      - 4005:5173
+    networks:
+      - nesjs-network
+    depends_on:
+      - mongodb
+    restart: unless-stopped
 
   workers:
     build:
@@ -113,14 +118,15 @@ services:
     environment:
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
-      AMQP_PASSWORD: ${AMQP_PASSWORD}
-      AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_URL: ${AMQP_URL}
+      AMQP_USERNAME: ${AMQP_USERNAME}
+      AMQP_PASSWORD: ${AMQP_PASSWORD}
       AMQP_HOST: ${AMQP_HOST}
       AMQP_PORT: ${AMQP_PORT}
       MONGODB_CONNECTION: ${MONGODB_CONNECTION}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+
     ports:
       - 4006:3001
     networks:
