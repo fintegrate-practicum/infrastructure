@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RabbitConsumerService } from './services/rabbit-consumer/rabbit-consumer.service';
@@ -13,7 +13,6 @@ import { EmailSettingsModule } from './email-settings/modules/email-settings.mod
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env' }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -37,14 +36,4 @@ import { EmailSettingsModule } from './email-settings/modules/email-settings.mod
     MailBridgeService,
   ],
 })
-export class AppModule implements OnModuleInit {
-  async onModuleInit() {
-    try {
-      // הודעה כאשר התחברות למסד הנתונים מוצלחת
-      console.log('Connected to MongoDB successfully!');
-    } catch (error) {
-      // הודעת שגיאה אם יש בעיה בהתחברות למסד הנתונים
-      console.error('Failed to connect to MongoDB:', error);
-    }
-  }
-}
+export class AppModule {}
