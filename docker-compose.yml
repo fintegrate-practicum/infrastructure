@@ -5,12 +5,13 @@ services:
       context: ../communication
       dockerfile: Dockerfile.dev
     environment:
-      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_URI: ${MONGO_URI}
+
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
-      URL: ${AMQP_URL}
+      AMQP_URL: ${AMQP_URL}
       MAILGUN_API_KEY: ${MAILGUN_API_KEY}
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
       MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
@@ -32,7 +33,7 @@ services:
       context: ../infra
       dockerfile: Dockerfile.dev
     environment:
-      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_HOST: ${AMQP_HOST}
@@ -57,7 +58,7 @@ services:
       context: ../inventory
       dockerfile: Dockerfile.dev
     environment:
-      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_URI: ${MONGO_URI}
       DB_NAME: ${DB_NAME}
     ports:
       - 4003:4000
@@ -78,7 +79,7 @@ services:
       AMQP_PORT: ${AMQP_PORT}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
-      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_URI: ${MONGO_URI}
       ENV: ${ENV}
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
     ports:
@@ -126,7 +127,7 @@ services:
       AMQP_PASSWORD: ${AMQP_PASSWORD}
       AMQP_HOST: ${AMQP_HOST}
       AMQP_PORT: ${AMQP_PORT}
-      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_URI: ${MONGO_URI}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
     ports:
