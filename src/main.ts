@@ -7,7 +7,7 @@ async function bootstrap() {
     const microserviceApp = await NestFactory.createMicroservice(AppModule, {
       transport: Transport.RMQ,
       options: {
-        urls: [process.env.URL],
+        urls: [process.env.AMQP_URL],
         queue: process.env.RABBITMQ_QUEUE_NAME,
         exchange: process.env.RABBITMQ_EXCHANGE_NAME,
         username: process.env.AMQP_USERNAME,
@@ -16,9 +16,9 @@ async function bootstrap() {
     });
     microserviceApp.listen();
 
-    const httpApp = await NestFactory.create(AppModule);
-    await httpApp.listen(4000);
-    console.log('HTTP server is listening on port 4000');
+    const app = await NestFactory.create(AppModule);
+    await app.listen(4000);
+    console.log('Server is running on http://localhost:4000');
   } catch (error) {
     console.error('Error during bootstrap:', error);
   }
