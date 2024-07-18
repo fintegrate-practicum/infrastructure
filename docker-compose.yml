@@ -3,10 +3,9 @@ services:
   communication:
     build:
       context: ../communication
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     environment:
       MONGODB_URI: ${MONGO_URI}
-
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_USERNAME: ${AMQP_USERNAME}
@@ -31,13 +30,14 @@ services:
   infra:
     build:
       context: ../infra
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     environment:
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_HOST: ${AMQP_HOST}
       AMQP_PORT: ${AMQP_PORT}
+      AMQP_URL: ${AMQP_URL}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
       WORKERS_SERVICE_URL: ${WORKERS_SERVICE_URL}
@@ -56,7 +56,7 @@ services:
   inventory:
     build:
       context: ../inventory
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     environment:
       MONGODB_URI: ${MONGO_URI}
       DB_NAME: ${DB_NAME}
@@ -72,11 +72,12 @@ services:
   orders:
     build:
       context: ../orders
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     environment:
       BASE_URL: ${REACT_APP_API_URL}
       AMQP_HOST: ${AMQP_HOST}
       AMQP_PORT: ${AMQP_PORT}
+      AMQP_URL: ${AMQP_URL}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
       MONGODB_URI: ${MONGO_URI}
@@ -94,7 +95,7 @@ services:
   website:
     build:
       context: ../website
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     environment:
       VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
       VITE_AUTH0_CLIENT_ID: ${VITE_AUTH0_CLIENT_ID}
@@ -118,7 +119,7 @@ services:
   workers:
     build:
       context: ../workers
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     environment:
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
