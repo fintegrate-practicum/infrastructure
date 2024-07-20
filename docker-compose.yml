@@ -140,7 +140,6 @@ services:
       - mongodb
     restart: unless-stopped
 
-
   mongodb:
     image: mongo:latest
     ports:
@@ -164,3 +163,7 @@ services:
     networks:
       - nesjs-network
     restart: always
+
+networks:
+  nesjs-network:
+    driver: bridge
