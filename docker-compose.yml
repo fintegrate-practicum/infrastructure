@@ -143,7 +143,7 @@ services:
   mongodb:
     image: mongo:latest
     ports:
-      - "${MONGODB_PORT}:27017"
+      - "27018:27017"
     volumes:
       - ./database:/data/db
     networks:
@@ -156,7 +156,7 @@ services:
       RABBITMQ_DEFAULT_USER: ${AMQP_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${AMQP_PASSWORD}
     ports:
-      - "${AMQP_PORT}:5672"
+      - "5673:5672"
     volumes:
       - ./rabbitmq/data/:/var/lib/rabbitmq
       - ./rabbitmq/log/:/var/log/rabbitmq
