@@ -10,9 +10,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EmailLogModule } from './email-log/module/email-log.module';
 import { EmailModule } from './modules/email.module';
 import { EmailSettingsModule } from './email-settings/modules/email-settings.module';
+
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -22,7 +22,7 @@ import { EmailSettingsModule } from './email-settings/modules/email-settings.mod
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('DATABASE_URI'),
+        uri: process.env.MONGODB_URI,
       }),
       inject: [ConfigService],
     }),

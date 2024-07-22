@@ -1,3 +1,4 @@
+FROM node:lts-alpine
 
 FROM node:18
 # --- NETFREE CERT INTSALL ---
@@ -9,25 +10,17 @@ FROM node:18
     # --- END NETFREE CERT INTSALL ---
 WORKDIR /app
 
-COPY . /app
 
-RUN npm i -g nodemon
-
-
-# RUN npm install @nestjs/common
-
-RUN npm install @nestjs/core
-
-RUN npm i reflect-metadata
-
-RUN npm run build
-
-EXPOSE 4156
-
-CMD [ "node", "dist/main" ]
+COPY package*.json ./
 
 
+RUN npm install
+
+COPY . .
 
 
+EXPOSE 4000
 
+
+CMD [ "npm", "run","start:dev" ]
 
