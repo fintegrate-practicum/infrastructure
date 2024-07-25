@@ -4,7 +4,7 @@ services:
     build:
       context: ../communication
       dockerfile: Dockerfile
-   environment:
+    environment:
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
@@ -30,7 +30,7 @@ services:
     build:
       context: ../infra
       dockerfile: Dockerfile
-   environment:
+    environment:
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
@@ -124,7 +124,7 @@ services:
     build:
       context: ../workers
       dockerfile: Dockerfile
-   environment:
+    environment:
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_URL: ${AMQP_URL}
