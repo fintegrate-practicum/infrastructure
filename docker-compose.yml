@@ -25,6 +25,8 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
+    volumes:
+      - ../communication:/app
 
   infra:
     build:
