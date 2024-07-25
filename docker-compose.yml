@@ -84,7 +84,6 @@ services:
       MONGODB_URI: ${MONGO_URI}
       ENV: ${ENV}
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
-
     ports:
       - 4004:4000
       - 9226:9229
