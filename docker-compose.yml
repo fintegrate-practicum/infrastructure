@@ -4,7 +4,7 @@ services:
     build:
       context: ../communication
       dockerfile: Dockerfile
-    environment:
+   environment:
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
@@ -17,6 +17,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      
     ports:
       - 4001:4000
       - 9229:9229
@@ -24,13 +25,13 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-
+    restart: unless-stopped
 
   infra:
     build:
       context: ../infra
       dockerfile: Dockerfile
-    environment:
+   environment:
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
@@ -41,6 +42,7 @@ services:
       AMQP_PASSWORD: ${AMQP_PASSWORD}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      
     ports:
       - 4002:4000
       - 9228:9229
@@ -48,7 +50,9 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-
+    restart: unless-stopped
+    volumes:
+      - ../infra:/app
 
   inventory:
     build:
@@ -64,6 +68,9 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
+    restart: unless-stopped
+    volumes:
+      - ../inventory:/app
 
   orders:
     build:
@@ -78,6 +85,7 @@ services:
       MONGODB_URI: ${MONGO_URI}
       ENV: ${ENV}
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
+
     ports:
       - 4004:4000
       - 9226:9229
@@ -85,7 +93,9 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-
+    restart: unless-stopped
+    volumes:
+      - ../orders:/app
 
   website:
     build:
@@ -107,13 +117,15 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-
+    restart: unless-stopped
+    volumes:
+      - ../website:/app
 
   workers:
     build:
       context: ../workers
       dockerfile: Dockerfile
-    environment:
+   environment:
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_URL: ${AMQP_URL}
@@ -131,7 +143,9 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-
+    restart: unless-stopped
+    volumes:
+      - ../workers:/app
 
   mongodb:
     image: mongo:latest
@@ -141,6 +155,7 @@ services:
       - ./database:/data/db
     networks:
       - nesjs-network
+    restart: always
 
   rabbitmq:
     image: rabbitmq:3.8-management-alpine
@@ -154,6 +169,7 @@ services:
       - ./rabbitmq/log/:/var/log/rabbitmq
     networks:
       - nesjs-network
+    restart: always
 
 networks:
   nesjs-network:
