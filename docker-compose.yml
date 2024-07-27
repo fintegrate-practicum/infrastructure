@@ -1,33 +1,31 @@
 version: '3.8'
 services:
-  communication:
-    build:
-      context: ../communication
-      dockerfile: Dockerfile
-    environment:
-      MONGODB_URI: ${MONGO_URI}
-      RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
-      RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
-      AMQP_USERNAME: ${AMQP_USERNAME}
-      AMQP_PASSWORD: ${AMQP_PASSWORD}
-      AMQP_URL: ${AMQP_URL}
-      MAILGUN_API_KEY: ${MAILGUN_API_KEY}
-      MAILGUN_EMAIL: ${MAILGUN_EMAIL}
-      MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+  # communication:
+  #   build:
+  #     context: ../communication
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     MONGODB_URI: ${MONGO_URI}
+  #     RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
+  #     RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
+  #     AMQP_USERNAME: ${AMQP_USERNAME}
+  #     AMQP_PASSWORD: ${AMQP_PASSWORD}
+  #     AMQP_URL: ${AMQP_URL}
+  #     MAILGUN_API_KEY: ${MAILGUN_API_KEY}
+  #     MAILGUN_EMAIL: ${MAILGUN_EMAIL}
+  #     MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
+  #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+  #     MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       
-    ports:
-      - 4001:4000
-      - 9229:9229
-    networks:
-      - nesjs-network
-    depends_on:
-      - mongodb
-    restart: unless-stopped
-    volumes:
-      - ../communication:/app
+  #   ports:
+  #     - 4001:4000
+  #     - 9229:9229
+  #   networks:
+  #     - nesjs-network
+  #   depends_on:
+  #     - mongodb
+
 
   infra:
     build:
@@ -53,9 +51,7 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-    restart: unless-stopped
-    volumes:
-      - ../infra:/app
+
 
   inventory:
     build:
@@ -71,9 +67,7 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-    restart: unless-stopped
-    volumes:
-      - ../inventory:/app
+
 
   orders:
     build:
@@ -96,9 +90,7 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-    restart: unless-stopped
-    volumes:
-      - ../orders:/app
+
 
   website:
     build:
@@ -114,6 +106,7 @@ services:
       VITE_BUSINESSID: ${VITE_BUSINESSID}
       VITE_MANAGERID: ${VITE_MANAGERID}
       VITE_BASE_API_URL: ${VITE_BASE_API_URL}
+      VITE_ORDERS_SERVICE_URL: ${VITE_ORDERS_SERVICE_URL}
       VITE_HTTP: ${VITE_HTTP}
       REACT_APP_API_URL: ${REACT_APP_API_URL}
     ports:
@@ -122,9 +115,7 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-    restart: unless-stopped
-    volumes:
-      - ../website:/app
+  
 
   workers:
     build:
@@ -148,9 +139,7 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-    restart: unless-stopped
-    volumes:
-      - ../workers:/app
+ 
 
   mongodb:
     image: mongo:latest
