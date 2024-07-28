@@ -59,7 +59,6 @@ services:
     volumes:
       - ../infra:/app
       - /app/node_modules
- 
 
   inventory:
     build:
@@ -75,6 +74,7 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
+
     restart: unless-stopped
     volumes:
       - ../inventory:/app
@@ -122,6 +122,7 @@ services:
       VITE_BUSINESSID: ${VITE_BUSINESSID}
       VITE_MANAGERID: ${VITE_MANAGERID}
       VITE_BASE_API_URL: ${VITE_BASE_API_URL}
+      VITE_ORDERS_SERVICE_URL: ${VITE_ORDERS_SERVICE_URL}
       VITE_HTTP: ${VITE_HTTP}
       
     ports:
@@ -134,7 +135,6 @@ services:
     volumes:
       - ../website:/app
       - /app/node_modules
-
 
   workers:
     build:
