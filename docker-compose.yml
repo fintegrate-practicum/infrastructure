@@ -28,7 +28,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../communication:/app
-      - /app/node_modules
 
 
   infra:
@@ -58,7 +57,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../infra:/app
-      - /app/node_modules
 
   inventory:
     build:
@@ -78,7 +76,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../inventory:/app
-      - /app/node_modules
 
 
   orders:
@@ -104,7 +101,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../orders:/app
-      - /app/node_modules
 
 
 
@@ -131,7 +127,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../website:/app
-      - /app/node_modules
 
   workers:
     build:
@@ -159,7 +154,6 @@ services:
     restart: unless-stopped
     volumes:
       - ../workers:/app
-      - /app/node_modules
 
 
   mongodb:
