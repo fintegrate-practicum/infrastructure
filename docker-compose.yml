@@ -33,6 +33,7 @@ services:
       context: ../infra
       dockerfile: Dockerfile
     environment:
+      WORKERS_SERVICE_URL: ${WORKERS_SERVICE_URL}
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
@@ -43,7 +44,6 @@ services:
       AMQP_PASSWORD: ${AMQP_PASSWORD}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
-      WORKERS_SERVICE_URL: ${WORKERS_SERVICE_URL}
       
     ports:
       - 4002:4000
