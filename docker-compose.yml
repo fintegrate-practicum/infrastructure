@@ -28,6 +28,8 @@ services:
     restart: unless-stopped
     volumes:
       - ../communication:/app
+      - /app/node_modules
+
 
   infra:
     build:
@@ -56,6 +58,8 @@ services:
     restart: unless-stopped
     volumes:
       - ../infra:/app
+      - /app/node_modules
+ 
 
   inventory:
     build:
@@ -74,13 +78,14 @@ services:
     restart: unless-stopped
     volumes:
       - ../inventory:/app
+      - /app/node_modules
+
 
   orders:
     build:
       context: ../orders
       dockerfile: Dockerfile
     environment:
-      BASE_URL: ${REACT_APP_API_URL}
       AMQP_HOST: ${AMQP_HOST}
       AMQP_PORT: ${AMQP_PORT}
       AMQP_URL: ${AMQP_URL}
@@ -91,7 +96,7 @@ services:
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
     ports:
       - 4004:4000
-      - 9226:9229
+      - 4005:4000
     networks:
       - nesjs-network
     depends_on:
@@ -99,6 +104,9 @@ services:
     restart: unless-stopped
     volumes:
       - ../orders:/app
+      - /app/node_modules
+
+
 
   website:
     build:
@@ -109,13 +117,13 @@ services:
       VITE_AUTH0_CLIENT_ID: ${VITE_AUTH0_CLIENT_ID}
       VITE_AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
       VITE_INFRA_SERVER_URL: ${VITE_INFRA_SERVER_URL}
-      VITE_WORKERS_SERVER_URL: ${REACT_APP_API_URL}
-      VITE_SERVER_URL: ${REACT_APP_API_URL}
+      VITE_WORKERS_SERVER_URL: ${VITE_WORKERS_SERVER_URL}
+      VITE_SERVER_URL: ${VITE_INFRA_SERVER_URL}
       VITE_BUSINESSID: ${VITE_BUSINESSID}
       VITE_MANAGERID: ${VITE_MANAGERID}
       VITE_BASE_API_URL: ${VITE_BASE_API_URL}
       VITE_HTTP: ${VITE_HTTP}
-      REACT_APP_API_URL: ${REACT_APP_API_URL}
+      
     ports:
       - "4005:5173"
     networks:
@@ -125,6 +133,8 @@ services:
     restart: unless-stopped
     volumes:
       - ../website:/app
+      - /app/node_modules
+
 
   workers:
     build:
@@ -151,6 +161,8 @@ services:
     restart: unless-stopped
     volumes:
       - ../workers:/app
+      - /app/node_modules
+
 
   mongodb:
     image: mongo:latest
