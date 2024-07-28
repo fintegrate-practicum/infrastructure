@@ -72,7 +72,6 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
-
     restart: unless-stopped
     volumes:
       - ../inventory:/app
