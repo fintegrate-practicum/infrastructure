@@ -96,6 +96,7 @@ services:
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
     ports:
       - 4004:4000
+      - 4005:4000
     networks:
       - nesjs-network
     depends_on:
