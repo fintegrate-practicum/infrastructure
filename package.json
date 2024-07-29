@@ -7,5 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "chany",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/mongoose": "^10.0.10",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
 }

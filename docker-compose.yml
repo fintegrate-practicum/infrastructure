@@ -128,9 +128,9 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
-    volumes:
-      - ../website:/app
-      - /app/node_modules
+    # volumes:
+    #   - ../website:/app
+    #   - /app/node_modules
 
   workers:
     build:
