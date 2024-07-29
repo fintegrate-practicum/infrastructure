@@ -1,0 +1,11 @@
+{
+  "name": "infrastructure",
+  "version": "1.0.0",
+  "description": "This is a utility project to help you download and run Fintegrate's infrastructure.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "chany",
+  "license": "ISC"
+}
