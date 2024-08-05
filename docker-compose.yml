@@ -5,6 +5,8 @@ services:
       context: ../communication
       dockerfile: Dockerfile
     environment:
+      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
