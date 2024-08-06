@@ -77,6 +77,9 @@ services:
       RABBITMQ_DEFAULT_PASS: ${AMQP_PASSWORD}
     ports:
       - "5673:5672"
+    volumes:
+      - ./rabbitmq/data/:/var/lib/rabbitmq
+      - ./rabbitmq/log/:/var/log/rabbitmq
     networks:
       - nesjs-network
     restart: always
