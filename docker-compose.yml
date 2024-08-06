@@ -6,13 +6,14 @@ services:
       dockerfile: Dockerfile
     environment:
       MONGO_URI: ${MONGO_URI}
+      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
       AMQP_URL: ${AMQP_URL}
-      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
-      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
@@ -37,6 +38,8 @@ services:
       dockerfile: Dockerfile
     environment:
       MONGO_URI: ${MONGO_URI}
+      VITE_WORKERS_SERVICE_URL: ${VITE_WORKERS_SERVICE_URL}
+      MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_HOST: ${AMQP_HOST}
@@ -44,10 +47,10 @@ services:
       AMQP_URL: ${AMQP_URL}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
-      WORKERS_SERVICE_URL: ${WORKERS_SERVICE_URL}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
-      
+      VITE_DOCKER_WORKERS_SERVER_URL: ${VITE_DOCKER_WORKERS_SERVER_URL}
+
     ports:
       - 4002:4000
       - 9228:9229
@@ -59,7 +62,6 @@ services:
     volumes:
       - ../infra:/app
       - /app/node_modules
- 
 
   inventory:
     build:
@@ -68,6 +70,11 @@ services:
     environment:
       MONGO_URI: ${MONGO_URI}
       DB_NAME: ${DB_NAME}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      WORKERS_SERVICE_URL: ${VITE_WORKERS_SERVICE_URL}
+      VITE_DOCKER_WORKERS_SERVER_URL: ${VITE_DOCKER_WORKERS_SERVER_URL}
+
     ports:
       - 4003:4000
       - 9227:9229
@@ -75,6 +82,7 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
+
     restart: unless-stopped
     volumes:
       - ../inventory:/app
@@ -94,6 +102,11 @@ services:
       MONGO_URI: ${MONGO_URI}
       ENV: ${ENV}
       MAILGUN_EMAIL: ${MAILGUN_EMAIL}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      WORKERS_SERVICE_URL: ${VITE_WORKERS_SERVICE_URL}
+      VITE_DOCKER_WORKERS_SERVER_URL: ${VITE_DOCKER_WORKERS_SERVER_URL}
+
     ports:
       - 4004:4000
       - 9226:9229
@@ -107,7 +120,6 @@ services:
       - /app/node_modules
 
 
-
   website:
     build:
       context: ../website
@@ -115,14 +127,12 @@ services:
     environment:
       VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
       VITE_AUTH0_CLIENT_ID: ${VITE_AUTH0_CLIENT_ID}
-      VITE_AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
-      VITE_INFRA_SERVER_URL: ${VITE_INFRA_SERVER_URL}
-      VITE_WORKERS_SERVER_URL: ${VITE_WORKERS_SERVER_URL}
-      VITE_SERVER_URL: ${VITE_INFRA_SERVER_URL}
+      VITE_AUTH0_AUDIENCE: ${VITE_AUTH0_AUDIENCE}
       VITE_BUSINESSID: ${VITE_BUSINESSID}
       VITE_MANAGERID: ${VITE_MANAGERID}
-      VITE_BASE_API_URL: ${VITE_BASE_API_URL}
-      VITE_HTTP: ${VITE_HTTP}
+      VITE_INFRA_SERVICE_URL: ${VITE_INFRA_SERVICE_URL}
+      VITE_INVENTORY_SERVICE_URL: ${VITE_INVENTORY_SERVICE_URL}
+      VITE_WORKERS_SERVICE_URL: ${VITE_WORKERS_SERVICE_URL}
       
     ports:
       - "4005:5173"
@@ -134,7 +144,6 @@ services:
     volumes:
       - ../website:/app
       - /app/node_modules
-
 
   workers:
     build:
@@ -152,6 +161,8 @@ services:
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
       VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
+      VITE_DOCKER_WORKERS_SERVER_URL: ${VITE_DOCKER_WORKERS_SERVER_URL}
+
     ports:
       - 4006:4000
       - 9224:9229
