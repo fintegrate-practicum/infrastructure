@@ -1,0 +1,86 @@
+version: '3.8'
+services:
+  communication:
+    build:
+      context: ../communication
+      dockerfile: Dockerfile.prod
+    ports:
+      - 4001:4000
+    networks:
+      - nesjs-network
+    restart: unless-stopped
+
+  infra:
+    build:
+      context: ../infra
+      dockerfile: Dockerfile.prod
+    ports:
+      - 4002:4000
+    networks:
+      - nesjs-network
+    restart: unless-stopped
+
+  inventory:
+    build:
+      context: ../inventory
+      dockerfile: Dockerfile.prod
+    ports:
+      - 4003:4000
+    networks:
+      - nesjs-network
+    restart: unless-stopped
+
+  orders:
+    build:
+      context: ../orders
+      dockerfile: Dockerfile.prod
+    ports:
+      - 4004:4000
+    networks:
+      - nesjs-network
+    restart: unless-stopped
+  
+  website:
+    build:
+      context: ../website
+      dockerfile: Dockerfile.prod
+    ports:
+      - 4005:5173
+    networks:
+      - nesjs-network
+    restart: unless-stopped
+  
+  workers:
+    build:
+      context: ../workers
+      dockerfile: Dockerfile.prod
+    ports:
+      - 4006:4000
+    networks:
+      - nesjs-network
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./database:/data/db
+    networks:
+      - nesjs-network
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${AMQP_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${AMQP_PASSWORD}
+    ports:
+      - "5673:5672"
+    networks:
+      - nesjs-network
+    restart: always
+
+networks:
+  nesjs-network:
+    driver: bridge
