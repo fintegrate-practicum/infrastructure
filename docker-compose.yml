@@ -5,15 +5,16 @@ services:
       context: ../communication
       dockerfile: Dockerfile
     environment:
+      PAPERTRAIL_HOST: ${PAPERTRAIL_HOST}
+      PAPERTRAIL_PORT: ${PAPERTRAIL_PORT}
+      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
       AMQP_URL: ${AMQP_URL}
-      MAILGUN_API_KEY: ${MAILGUN_API_KEY}
-      MAILGUN_EMAIL: ${MAILGUN_EMAIL}
-      MAILGUN_DOMAIN: ${MAILGUN_DOMAIN}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
@@ -26,12 +27,19 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
+    volumes:
+      - ../communication:/app
+      - /app/node_modules
+
 
   infra:
     build:
       context: ../infra
       dockerfile: Dockerfile
     environment:
+      PAPERTRAIL_HOST: ${PAPERTRAIL_HOST}
+      PAPERTRAIL_PORT: ${PAPERTRAIL_PORT}
+      VITE_WORKERS_SERVICE_URL: ${VITE_WORKERS_SERVICE_URL}
       MONGODB_URI: ${MONGO_URI}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
@@ -40,10 +48,11 @@ services:
       AMQP_URL: ${AMQP_URL}
       AMQP_USERNAME: ${AMQP_USERNAME}
       AMQP_PASSWORD: ${AMQP_PASSWORD}
-      WORKERS_SERVICE_URL: ${WORKERS_SERVICE_URL}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
-      
+      VITE_DOCKER_WORKERS_SERVER_URL: ${VITE_DOCKER_WORKERS_SERVER_URL}
+      VITE_DOCKER_INFRA_SERVER_URL: ${VITE_DOCKER_INFRA_SERVER_URL}
+      INTERNAL_SECRET: ${INTERNAL_SECRET}
     ports:
       - 4002:4000
       - 9228:9229
@@ -52,14 +61,25 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
+    volumes:
+      - ../infra:/app
+      - /app/node_modules
 
   inventory:
     build:
       context: ../inventory
       dockerfile: Dockerfile
     environment:
+      PAPERTRAIL_HOST: ${PAPERTRAIL_HOST}
+      PAPERTRAIL_PORT: ${PAPERTRAIL_PORT}
       MONGODB_URI: ${MONGO_URI}
       DB_NAME: ${DB_NAME}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      WORKERS_SERVICE_URL: ${VITE_WORKERS_SERVICE_URL}
+      VITE_DOCKER_WORKERS_SERVER_URL: ${VITE_DOCKER_WORKERS_SERVER_URL}
+      VITE_DOCKER_INFRA_SERVER_URL: ${VITE_DOCKER_INFRA_SERVER_URL}
+
     ports:
       - 4003:4000
       - 9227:9229
@@ -67,14 +87,20 @@ services:
       - nesjs-network
     depends_on:
       - mongodb
+
     restart: unless-stopped
+    volumes:
+      - ../inventory:/app
+      - /app/node_modules
+
 
   orders:
     build:
       context: ../orders
       dockerfile: Dockerfile
     environment:
-      BASE_URL: ${REACT_APP_API_URL}
+      PAPERTRAIL_HOST: ${PAPERTRAIL_HOST}
+      PAPERTRAIL_PORT: ${PAPERTRAIL_PORT}
       AMQP_HOST: ${AMQP_HOST}
       AMQP_PORT: ${AMQP_PORT}
       AMQP_URL: ${AMQP_URL}
@@ -82,7 +108,13 @@ services:
       AMQP_PASSWORD: ${AMQP_PASSWORD}
       MONGODB_URI: ${MONGO_URI}
       ENV: ${ENV}
-      MAILGUN_EMAIL: ${MAILGUN_EMAIL}
+      SENDGRID_FROM_EMAIL: ${SENDGRID_FROM_EMAIL}
+      AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      WORKERS_SERVICE_URL: ${VITE_WORKERS_SERVICE_URL}
+      VITE_DOCKER_INFRA_SERVER_URL: ${VITE_DOCKER_INFRA_SERVER_URL}
+      VITE_DOCKER_INVENTORY_SERVER_URL: ${VITE_DOCKER_INVENTORY_SERVER_URL}
+      
     ports:
       - 4004:4000
       - 9226:9229
@@ -91,6 +123,10 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
+    volumes:
+      - ../orders:/app
+      - /app/node_modules
+
 
   website:
     build:
@@ -100,14 +136,12 @@ services:
       VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
       VITE_AUTH0_CLIENT_ID: ${VITE_AUTH0_CLIENT_ID}
       VITE_AUTH0_AUDIENCE: ${VITE_AUTH0_AUDIENCE}
-      VITE_INFRA_SERVER_URL: ${VITE_INFRA_SERVER_URL}
-      VITE_WORKERS_SERVER_URL: ${REACT_APP_API_URL}
-      VITE_SERVER_URL: ${REACT_APP_API_URL}
       VITE_BUSINESSID: ${VITE_BUSINESSID}
       VITE_MANAGERID: ${VITE_MANAGERID}
-      VITE_BASE_API_URL: ${VITE_BASE_API_URL}
-      VITE_HTTP: ${VITE_HTTP}
-      REACT_APP_API_URL: ${REACT_APP_API_URL}
+      VITE_INFRA_SERVICE_URL: ${VITE_INFRA_SERVICE_URL}
+      VITE_INVENTORY_SERVICE_URL: ${VITE_INVENTORY_SERVICE_URL}
+      VITE_WORKERS_SERVICE_URL: ${VITE_WORKERS_SERVICE_URL}
+      
     ports:
       - "4005:5173"
     networks:
@@ -115,12 +149,17 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
+    volumes:
+      - ../website:/app
+      - /app/node_modules
 
   workers:
     build:
       context: ../workers
       dockerfile: Dockerfile
     environment:
+      PAPERTRAIL_HOST: ${PAPERTRAIL_HOST}
+      PAPERTRAIL_PORT: ${PAPERTRAIL_PORT}
       RABBITMQ_EXCHANGE_NAME: ${RABBITMQ_EXCHANGE_NAME}
       RABBITMQ_QUEUE_NAME: ${RABBITMQ_QUEUE_NAME}
       AMQP_URL: ${AMQP_URL}
@@ -131,6 +170,14 @@ services:
       MONGODB_URI: ${MONGO_URI}
       AUTH0_ISSUER_BASE_URL: ${AUTH0_ISSUER_BASE_URL}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
+      VITE_DOCKER_WORKERS_SERVER_URL: ${VITE_DOCKER_WORKERS_SERVER_URL}
+      VITE_DOCKER_INFRA_SERVER_URL: ${VITE_DOCKER_INFRA_SERVER_URL}
+      CLIENT_ID_FROM_GOOGLE_CONSOLE: ${VITE_CLIENT_ID_FROM_GOOGLE_CONSOLE}
+      CLIENT_SECRET_CODE_GOOGLE_CONSOLE: ${VITE_CLIENT_SECRET_CODE_GOOGLE_CONSOLE}
+      SCOPES_GOOGLE_CALENDAR: ${VITE_SCOPES_GOOGLE_CALENDAR}
+      REDIRECT_URI_FOR_AUTH: ${VITE_REDIRECT_URI_FOR_AUTH}
+
     ports:
       - 4006:4000
       - 9224:9229
@@ -139,6 +186,10 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
+    volumes:
+      - ../workers:/app
+      - /app/node_modules
+
 
   mongodb:
     image: mongo:latest
